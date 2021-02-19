@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/app",
     "connect": "./scripts/connect.sh",
-    "deploy": "yarn connect \"bash /home/ubuntu/scripts/deploy.sh\"",
+    "deploy": "ssh -i ./src/config/lazy-student.pem $LAZYSTUDENTSERVER \"bash /home/ubuntu/scripts/deploy.sh\"",
     "configure": "./scripts/configuredb.sh",
     "crawl": "node ./src/utils/news/crawl.js"
   },
