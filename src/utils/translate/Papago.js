@@ -1,41 +1,31 @@
 const axios = require('axios');
-const config = require('../../config');
+const {
+  papagoAPI: { client_id, client_secret },
+} = require('../../config');
+const _ = require('fxjs/Strict');
+const L = require('fxjs/Lazy');
+const C = require('fxjs/Concurrency');
 
-const Papago = async text => {
-  const array = [];
-  try {
-    for (const el of text) {
-      let jsonResult;
-      if (!el) {
-        jsonResult = [];
-      } else {
-        const options = {
-          url: 'https://openapi.naver.com/v1/papago/n2mt',
-          data: { source: 'zh-CN', target: 'ko', text: el },
-          method: 'POST',
-          headers: {
-            'X-Naver-Client-Id': config.papagoAPI.client_id,
-            'X-Naver-Client-Secret': config.papagoAPI.client_secret,
-          },
-        };
-        const {
-          data: {
-            message: {
-              result: { translatedText },
-            },
-          },
-        } = await axios(options);
-        jsonResult = translatedText;
-      }
-      array.push(jsonResult);
-    }
-  } catch (curlError) {
-    console.log(curlError);
-    return {
-      error: curlError,
-    };
-  }
-  return array;
-};
+const Papago = _.pipe(
+  L.map(sentence => ({
+    url: 'https://openapi.naver.com/v1/papago/n2mt',
+    data: { source: 'zh-CN', target: 'ko', text: sentence },
+    method: 'POST',
+    headers: {
+      'X-Naver-Client-Id': client_id,
+      'X-Naver-Client-Secret': client_secret,
+    },
+  })),
+  L.map(options => axios(options)),
+  C.map(
+    ({
+      data: {
+        message: {
+          result: { translatedText },
+        },
+      },
+    }) => translatedText,
+  ),
+);
 
 module.exports = Papago;
