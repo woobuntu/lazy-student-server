@@ -77,7 +77,6 @@ module.exports = async (req, res) => {
       origin: listOfOrigin[index],
     });
   }
-  console.log(0, data);
   await res.status(200).json({
     data,
   });
