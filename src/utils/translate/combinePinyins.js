@@ -1,10 +1,10 @@
-const _ = require('fxjs/Strict');
+const { compoundFunctions, map, join } = require('../../functions');
 
-const combinePinyins = _.pipe(
-  _.map(
-    _.pipe(
-      _.map(({ word, pinyin }) => pinyin),
-      _.join(' '),
+const combinePinyins = compoundFunctions(
+  map(
+    compoundFunctions(
+      map(({ word, pinyin }) => pinyin),
+      join(' '),
     ),
   ),
 );

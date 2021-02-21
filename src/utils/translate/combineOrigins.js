@@ -1,5 +1,5 @@
-const _ = require('fxjs/Strict');
+const { map, compoundFunctions } = require('../../functions');
 
-const combineOrigins = _.pipe(_.map(_.map(({ word }) => word)));
+const combineOrigins = compoundFunctions(map(map(({ word }) => word)));
 
 module.exports = combineOrigins;
